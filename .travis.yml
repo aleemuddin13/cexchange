@@ -2,6 +2,6 @@ language: node_js
 node_js:
 - '7.6.0'
 before_install:
-- npm install -g ts-node
+- npm install -g ts-node typescript
 script:
 - npm test
