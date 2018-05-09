@@ -2,12 +2,10 @@ language: node_js
 node_js:
 - '7.6.0'
 before_install:
-- npm install -g ts-node typescript
-script:
-- npm test
+- npm install -g jest
 
 jobs:
   include:
-    - stage: Produce Coverage
+    - stage: Run Tests
       node_js: node
-      script: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
+      script: npm test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage

@@ -1,19 +1,20 @@
 {
-  "name": "cexchange",
-  "version": "1.0.1",
+  "name"       : "cexchange",
+  "version"    : "1.0.1",
   "description": "Implementation of private and public api's of crypto exchanges",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "test": "jest",
+  "main"       : "dist/index.js",
+  "types"      : "dist/index.d.ts",
+  "scripts"    : {
+    "test"          : "jest",
+    "pretest"       : "./node_modules/.bin/eslint ./ --ignore-path .gitignore --ext .ts,.js",
     "prepublishOnly": "npm run compile",
-    "compile": "npm run clean && tsc -p .",
-    "watch": "tsc -w -p .",
-    "clean": "rm -rf dist"
+    "compile"       : "npm run clean && tsc -p .",
+    "watch"         : "tsc -w -p .",
+    "clean"         : "rm -rf dist"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aleemuddin13/cexchnage.git"
+    "url" : "git+https://github.com/aleemuddin13/cexchnage.git"
   },
   "keywords": [
     "crypto",
@@ -27,16 +28,29 @@
     "cryptoapi",
     "api"
   ],
-  "author": "Aleem Uddin <aleemuddin966@gmail.com>",
+  "author" : "Aleem Uddin <aleemuddin966@gmail.com>",
   "license": "MIT",
-  "bugs": {
+  "bugs"   : {
     "url": "https://github.com/aleemuddin13/cexchnage/issues"
   },
   "homepage": "https://github.com/aleemuddin13/cexchnage#readme",
+  "jest"    : {
+      "transform": {
+        "^.+\\.tsx?$": "ts-jest"
+      },
+    "testRegex"           : "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
+    "collectCoverage"     : true
+  },
   "devDependencies": {
-    "@types/jest": "^22.2.3",
-    "coveralls": "^3.0.1",
-    "ts-jest": "^22.4.5",
-    "typescript": "^2.8.3"
+    "@types/jest"              : "^22.2.3",
+    "coveralls"                : "^3.0.1",
+    "eslint"                   : "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import"     : "^2.11.0",
+    "eslint-plugin-typescript" : "^0.12.0",
+    "ts-jest"                  : "^22.4.5",
+    "typescript"               : "^2.8.3",
+    "typescript-eslint-parser" : "^15.0.0"
   }
 }
