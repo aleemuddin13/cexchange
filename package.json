@@ -1,0 +1,36 @@
+{
+  "name": "cexchange",
+  "version": "1.0.1",
+  "description": "Implementation of private and public api's of crypto exchanges",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "ts-node test/index.ts",
+    "prepublishOnly": "npm run compile",
+    "compile": "npm run clean && tsc -p .",
+    "watch": "tsc -w -p .",
+    "clean": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aleemuddin13/cexchnage.git"
+  },
+  "keywords": [
+    "crypto",
+    "exchange",
+    "api",
+    "bitsaa",
+    "tradesatoshi",
+    "poloneix",
+    "ccex",
+    "cryptoexchange",
+    "cryptoapi",
+    "api"
+  ],
+  "author": "Aleem Uddin <aleemuddin966@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aleemuddin13/cexchnage/issues"
+  },
+  "homepage": "https://github.com/aleemuddin13/cexchnage#readme"
+}
