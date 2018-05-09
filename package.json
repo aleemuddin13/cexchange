@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "ts-node test/index.ts",
+    "test": "jest",
     "prepublishOnly": "npm run compile",
     "compile": "npm run clean && tsc -p .",
     "watch": "tsc -w -p .",
@@ -32,5 +32,11 @@
   "bugs": {
     "url": "https://github.com/aleemuddin13/cexchnage/issues"
   },
-  "homepage": "https://github.com/aleemuddin13/cexchnage#readme"
+  "homepage": "https://github.com/aleemuddin13/cexchnage#readme",
+  "devDependencies": {
+    "@types/jest": "^22.2.3",
+    "coveralls": "^3.0.1",
+    "ts-jest": "^22.4.5",
+    "typescript": "^2.8.3"
+  }
 }
