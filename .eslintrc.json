@@ -6,8 +6,9 @@
         "typescript"
     ],
     "extends": "airbnb-base",
-    "rules": {
-        "no-undef": "off",
+    "rules"  : {
+        "no-undef"         : "off",
+        "no-unused-vars"   : "off",
         "import/extensions": [
             {
                 "js": "always",
@@ -17,7 +18,7 @@
         "import/no-unresolved": [
             {"ts": "off"}
         ],
-        "semi": "off",
+        "semi"           : "off",
         "no-multi-spaces": [
             "error",
             {
@@ -27,12 +28,12 @@
             }
         ],
         "import/no-dynamic-require": "off",
-        "key-spacing": [
+        "key-spacing"              : [
             "error",
             {
                 "singleLine": {
                     "beforeColon": false,
-                    "afterColon": true
+                    "afterColon" : true
                 },
                 "multiLine": {
                     "align": "colon"
@@ -51,10 +52,22 @@
         ],
         "indent": [
             2,
-            4
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "class-methods-use-this":[
+            "error",
+            {
+                "exceptMethods": [
+                    "toString",
+                    "getExchangeName"
+                ]
+            }
         ]
     },
-    "parser": "typescript-eslint-parser",
+    "parser"       : "typescript-eslint-parser",
     "parserOptions": {
         "ecmaVersion": 2017
     }

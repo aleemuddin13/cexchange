@@ -1,10 +1,30 @@
-export class Greeting {
-    greet: string
+import Exchanges from './Exchanges';
+import ExchangeInterface from './Interfaces/ExchangeInterface';
+
+const ExchangeList = Object.keys(Exchanges)
+
+class Cexchange {
     constructor() {
-        this.greet = null
+        for (const exchange of ExchangeList) {
+            this[exchange] = Exchanges[exchange]
+        }
+    }
+    static getNewCexchange(): Cexchange {
+        return new Cexchange()
+    }
+    getExchange(name:string, obj?: object):ExchangeInterface {
+        if (!this[name]) {
+            for (const exchange of ExchangeList) {
+                if (exchange.toLocaleLowerCase() === name) {
+                    this[name] = new Exchanges[exchange]()
+                    return this[name]
+                }
+            }
+        }
+        throw new Error('Invalid exchange name')
     }
 }
-export function test(greeting: Greeting) {
-    console.log(greeting.greet)
-}
-// const a = 'a'
+
+const cexchange = new Cexchange()
+
+module.exports = cexchange
