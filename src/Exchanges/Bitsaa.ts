@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
-import * as crypto from 'crypto-js';
+import * as crypto from 'crypto';
 import CryptoCoin from '../util/CrytoCoin';
 import Order from '../util/Order';
 import { OrderTypeEnum } from '../enums';
@@ -7,6 +7,7 @@ import Account from '../util/Account';
 import { Currency } from '../enums/index';
 import ExchangeInterface from '../Interfaces/ExchangeInterface';
 
+const BASE_URL = 'https://bitssa.com/api/v2'
 
 export default class Bitsaa implements ExchangeInterface {
     privateApi: AxiosInstance
@@ -16,11 +17,13 @@ export default class Bitsaa implements ExchangeInterface {
     secretKey: string
 
     constructor(obj?: Object) {
-        const objKeys = Object.keys(obj)
-        for (const key of objKeys) {
-            this[key] = obj[key]
+        if (obj) {
+            const objKeys = Object.keys(obj)
+            for (const key of objKeys) {
+                this[key] = obj[key]
+            }
         }
-        this.baseUrl = 'https://bitssa.com/api/v2'
+        this.baseUrl = BASE_URL
         this.privateApi = axios.create({
             baseURL: this.baseUrl
         })
@@ -66,9 +69,9 @@ export default class Bitsaa implements ExchangeInterface {
         queryParamsList.sort((a, b) => a.charCodeAt(0) - b.charCodeAt(0))
         const queryParams = queryParamsList.join('&')
 
-        const text          = `${config.method.toUpperCase()}|/api/v2${url}|${queryParams}`
-        const hash          = crypto.HmacSHA256(text, this.secretKey).toString()
-        const newConfig     = config
+        const text      = `${config.method.toUpperCase()}|/api/v2${url}|${queryParams}`
+        const hash      = crypto.createHmac('sha256', this.secretKey).update(text).digest('hex');
+        const newConfig = config
 
         newConfig.url = `${url}?${queryParams}&signature=${hash}`
         // console.log(config);

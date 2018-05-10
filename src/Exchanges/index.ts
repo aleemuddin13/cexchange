@@ -1,6 +1,8 @@
 import Bitsaa from './Bitsaa';
+import Tradesatoshi from './Tradesatoshi';
 
 const Exchange = {
-    Bitsaa
+    Bitsaa,
+    Tradesatoshi
 }
 export default Exchange
