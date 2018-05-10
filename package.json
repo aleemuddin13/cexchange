@@ -1,6 +1,6 @@
 {
   "name": "cexchange",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Implementation of private and public api's of crypto exchanges",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -63,7 +63,6 @@
     "typescript-eslint-parser": "^15.0.0"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "crypto-js": "^3.1.9-1"
+    "axios": "^0.18.0"
   }
 }
