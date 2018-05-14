@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aleemuddin13/cexchnage.git"
+    "url": "git+https://github.com/aleemuddin13/cexchange.git"
   },
   "keywords": [
     "crypto",
@@ -31,9 +31,9 @@
   "author": "Aleem Uddin <aleemuddin966@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/aleemuddin13/cexchnage/issues"
+    "url": "https://github.com/aleemuddin13/cexchange/issues"
   },
-  "homepage": "https://github.com/aleemuddin13/cexchnage#readme",
+  "homepage": "https://github.com/aleemuddin13/cexchange#readme",
   "jest": {
     "verbose": true,
     "transform": {
