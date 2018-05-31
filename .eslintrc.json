@@ -58,13 +58,7 @@
             }
         ],
         "class-methods-use-this":[
-            "error",
-            {
-                "exceptMethods": [
-                    "toString",
-                    "getExchangeName"
-                ]
-            }
+            "off"
         ]
     },
     "parser"       : "typescript-eslint-parser",

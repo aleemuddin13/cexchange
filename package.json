@@ -1,6 +1,6 @@
 {
   "name": "cexchange",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Implementation of private and public api's of crypto exchanges",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

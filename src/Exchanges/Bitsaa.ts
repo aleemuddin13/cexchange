@@ -6,6 +6,7 @@ import { OrderTypeEnum } from '../enums';
 import Account from '../util/Account';
 import { Currency } from '../enums/index';
 import ExchangeInterface from '../Interfaces/ExchangeInterface';
+import Ticker from '../util/Ticker';
 
 const BASE_URL = 'https://bitssa.com/api/v2'
 
@@ -180,9 +181,9 @@ export default class Bitsaa implements ExchangeInterface {
         return ordersList
     }
 
-    async getOrders(cryptocoin: CryptoCoin):
+    async getOrders(cryptocoin: CryptoCoin, limit:number = 10):
         Promise<{ buyOrderList: Order[], sellOrderList: Order[] }> {
-        const url                    = `order_book.json?market=${Bitsaa.getMarket(cryptocoin)}`
+        const url                    = `order_book.json?market=${Bitsaa.getMarket(cryptocoin)}&asks_limit=${limit}&bids_limit=${limit}`
         const res                    = await this.publicApi.get(url)
         const buyOrderList: Order[]  = []
         const sellOrderList: Order[] = []
@@ -204,6 +205,38 @@ export default class Bitsaa implements ExchangeInterface {
             }))
         }
         return { buyOrderList, sellOrderList }
+    }
+
+    getTicker(cryptocoin?: CryptoCoin, withVolume: boolean = false): Promise<Ticker> {
+        if (!withVolume) {
+            return this.publicApi
+                .get(`/tickers/${Bitsaa.getMarket(cryptocoin)}.json`)
+                .then((response) => {
+                    const result = response.data.ticker
+                    const ticker = new Ticker({
+                        ask: Number(result.sell),
+                        bid: Number(result.buy),
+                        cryptocoin
+                    })
+                    return ticker
+                }).catch((err) => {
+                    console.log(err);
+                    return new Ticker({})
+                })
+        }
+        return this.getOrders(cryptocoin, 1).then((data) => {
+            const { buyOrderList, sellOrderList } = data
+            const buyOrder = buyOrderList[0]
+            const sellOrder = sellOrderList[0]
+            const ticker = new Ticker({
+                ask      : sellOrder.price,
+                bid      : buyOrder.price,
+                askVolume: sellOrder.volume,
+                bidVolume: buyOrder.volume,
+                cryptocoin
+            })
+            return ticker
+        })
     }
 
     toString() {

@@ -14,9 +14,9 @@ export default class Order implements OrderInterface {
         for (const key of objKeys) {
             this[key] = obj[key]
         }
-        if (!(this.type in OrderTypeEnum)) {
-            throw new Error('invalid type')
-        }
+        // if (!(Object.values(OrderTypeEnum).includes(this.type))) {
+        //     throw new Error('invalid type')
+        // }
     }
 
     toString() {

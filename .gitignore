@@ -1,4 +1,5 @@
 dist
+dummy.ts
 # Logs
 logs
 *.log

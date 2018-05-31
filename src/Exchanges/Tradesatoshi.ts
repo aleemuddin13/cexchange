@@ -5,13 +5,15 @@ import Order from '../util/Order';
 import { OrderTypeEnum } from '../enums/index';
 import Account from '../util/Account';
 import ExchangeInterface from '../interfaces/ExchangeInterface';
+import Ticker from '../util/Ticker';
 
 declare const Buffer
 
 const BASE_URL = 'https://tradesatoshi.com/api'
 
 export default class Tradesatoshi implements ExchangeInterface {
-    axiosInstance: AxiosInstance
+    privateApi: AxiosInstance
+    publicApi: AxiosInstance
     baseUrl: string
     apiKey: string
     secretKey: string
@@ -24,10 +26,13 @@ export default class Tradesatoshi implements ExchangeInterface {
             }
         }
         this.baseUrl = BASE_URL
-        this.axiosInstance = axios.create({
+        this.privateApi = axios.create({
             baseURL: this.baseUrl
         })
-        this.axiosInstance.interceptors.request.use(
+        this.publicApi = axios.create({
+            baseURL: `${this.baseUrl}/public`
+        })
+        this.privateApi.interceptors.request.use(
             config => this.axiosInterceptor(config),
             error => Promise.reject(error)
         );
@@ -59,7 +64,7 @@ export default class Tradesatoshi implements ExchangeInterface {
 
     async getBalance(): Promise<Account> {
         const url = '/private/getbalance'
-        const res = await this.axiosInstance.post(url, { Currency: 'DKD' })
+        const res = await this.privateApi.post(url, { Currency: 'DKD' })
         if (res.data.success !== true) {
             throw new Error('unable to fetch response')
         }
@@ -71,25 +76,24 @@ export default class Tradesatoshi implements ExchangeInterface {
 
     async getMyOrders(): Promise<any> {
         const url = '/private/getorders'
-        const res = await this.axiosInstance.post(url, {})
+        const res = await this.privateApi.post(url, {})
         if (res.data.success !== true) {
             throw new Error('unable to fetch response')
         }
         const { result } = res.data
-        console.log(result);
     }
 
     async cancelMyAllOrders(cryptocoin?: CryptoCoin): Promise<any> {
         if (!cryptocoin) {
             const url = '/private/cancelorder'
-            const res = await this.axiosInstance.post(url, {
+            const res = await this.privateApi.post(url, {
                 Type: 'All'
             })
             return
         }
 
         const url = '/private/cancelorder'
-        const res = await this.axiosInstance.post(url, {
+        const res = await this.privateApi.post(url, {
             Type  : 'Market',
             Market: Tradesatoshi.getMarket(cryptocoin)
         })
@@ -97,11 +101,10 @@ export default class Tradesatoshi implements ExchangeInterface {
 
     async cancelMyOrder(id: any, cryptocoin?: CryptoCoin): Promise<any> {
         const url = '/private/cancelorder'
-        const res = await this.axiosInstance.post(url, {
+        const res = await this.privateApi.post(url, {
             Type   : 'Single',
             OrderId: id
         })
-        console.log(res.data);
     }
 
     static getMarket(cryptocoin:CryptoCoin): string {
@@ -116,7 +119,7 @@ export default class Tradesatoshi implements ExchangeInterface {
 
     async putOrder(order: Order): Promise<Order> {
         const url = '/private/submitorder'
-        const res = await this.axiosInstance.post(url, {
+        const res = await this.privateApi.post(url, {
             Market: Tradesatoshi.getMarket(order.cryptocoin),
             Type  : Tradesatoshi.getOrderType(order.type),
             Amount: order.volume,
@@ -138,7 +141,7 @@ export default class Tradesatoshi implements ExchangeInterface {
 
     async getBuyOrders(cryptocoin: CryptoCoin): Promise<Order[]> {
         const url = `/public/getorderbook?market=${Tradesatoshi.getMarket(cryptocoin)}&type=buy`
-        const res = await this.axiosInstance.get(url)
+        const res = await this.privateApi.get(url)
         const ordersList:[Order] = [new Order({ id: '1', type: 'SELL' })]
         ordersList.pop()
         for (const orderObj of res.data.result.buy) {
@@ -154,7 +157,7 @@ export default class Tradesatoshi implements ExchangeInterface {
 
     async getSellOrders(cryptocoin: CryptoCoin): Promise<Order[]> {
         const url = `/public/getorderbook?market=${Tradesatoshi.getMarket(cryptocoin)}&type=sell`
-        const res = await this.axiosInstance.get(url)
+        const res = await this.privateApi.get(url)
         const ordersList: [Order] = [new Order({ id: '1', type: 'SELL' })]
         ordersList.pop()
         for (const orderObj of res.data.result.sell) {
@@ -168,10 +171,10 @@ export default class Tradesatoshi implements ExchangeInterface {
         return ordersList
     }
 
-    async getOrders(cryptocoin:CryptoCoin):
+    async getOrders(cryptocoin:CryptoCoin, limit: Number = 10):
         Promise<{ buyOrderList: Order[]; sellOrderList: Order[]; }> {
-        const url = `/public/getorderbook?market=${Tradesatoshi.getMarket(cryptocoin)}&type=both`
-        const res = await this.axiosInstance.get(url)
+        const url = `/public/getorderbook?market=${Tradesatoshi.getMarket(cryptocoin)}&type=both&depth=${limit}`
+        const res = await this.privateApi.get(url)
 
         const buyOrderList:Order[]   = []
         const sellOrderList: Order[] = []
@@ -192,6 +195,36 @@ export default class Tradesatoshi implements ExchangeInterface {
             }))
         }
         return { buyOrderList, sellOrderList }
+    }
+
+    getTicker(cryptocoin?: CryptoCoin, withVolume: boolean = false): Promise<Ticker> {
+        if (!withVolume) {
+            return this.publicApi
+                .get(`/getticker?market=${Tradesatoshi.getMarket(cryptocoin)}`)
+                .then((response) => {
+                    const { result } = response.data
+                    const ticker = new Ticker({
+                        ask : result.ask,
+                        bid : result.bid,
+                        last: result.last,
+                        cryptocoin
+                    })
+                    return ticker
+                })
+        }
+        return this.getOrders(cryptocoin, 1).then((data) => {
+            const { buyOrderList, sellOrderList } = data
+            const buyOrder = buyOrderList[0]
+            const sellOrder = sellOrderList[0]
+            const ticker = new Ticker({
+                ask      : sellOrder.price,
+                bid      : buyOrder.price,
+                askVolume: sellOrder.volume,
+                bidVolume: buyOrder.volume,
+                cryptocoin
+            })
+            return ticker
+        })
     }
 
     toString() {
