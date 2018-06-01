@@ -5,5 +5,6 @@ export enum OrderTypeEnum{
 
 export enum Currency{
     DKD = 'dkd',
-    BTC = 'btc'
+    BTC = 'btc',
+    USD = 'usd'
 }

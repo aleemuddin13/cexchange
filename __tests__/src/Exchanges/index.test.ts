@@ -3,7 +3,7 @@ import * as path from 'path';
 import Exchange from '../../../src/Exchanges/index';
 
 describe('Check Exchange Files', () => {
-    it('Should check for Exchnage Object and files', () => {
+    it('Should check for Exchange Object and files', () => {
         const exchangeList = Object.keys(Exchange)
         return new Promise((resolve) => {
             fs.readdir(path.join(__dirname, '/../../../src/Exchanges'), (err, fileList) => {
@@ -23,7 +23,7 @@ describe('Check Exchange Files', () => {
 })
 
 describe('Check Exchange Test Files', () => {
-    it('Should check for Exchnage Object and files', () => {
+    it('Should check for Exchange Object and files', () => {
         const exchangeList = Object.keys(Exchange)
         return new Promise((resolve) => {
             fs.readdir(__dirname, (err, fileList) => {
