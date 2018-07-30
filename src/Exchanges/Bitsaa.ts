@@ -96,7 +96,7 @@ export default class Bitsaa implements ExchangeInterface {
     }
 
     async getMyOrders(cryptocoin?: CryptoCoin): Promise<any> {
-        const url = '/orders.json?market=dkdbtc'
+        const url = '/orders.json?market='+Bitsaa.getMarket(cryptocoin)
         const res = await this.privateApi.get(url)
         return res.data
     }
