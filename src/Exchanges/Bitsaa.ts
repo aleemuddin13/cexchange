@@ -1,12 +1,12 @@
 import axios, { AxiosInstance } from 'axios'
-import * as crypto from 'crypto';
-import CryptoCoin from '../util/CrytoCoin';
-import Order from '../util/Order';
-import { OrderTypeEnum } from '../enums';
-import Account from '../util/Account';
-import { Currency } from '../enums/index';
-import ExchangeInterface from '../Interfaces/ExchangeInterface';
-import Ticker from '../util/Ticker';
+import * as crypto from 'crypto'
+import CryptoCoin from '../util/CrytoCoin'
+import Order from '../util/Order'
+import { OrderTypeEnum } from '../enums'
+import Account from '../util/Account'
+import { Currency } from '../enums/index'
+import ExchangeInterface from '../Interfaces/ExchangeInterface'
+import Ticker from '../util/Ticker'
 
 const BASE_URL = 'https://bitssa.com/api/v2'
 
@@ -35,16 +35,16 @@ export default class Bitsaa implements ExchangeInterface {
         this.privateApi.interceptors.request.use(
             config => this.axiosInterceptor(config),
             error => Promise.reject(error)
-        );
+        )
     }
 
-    static getExtraParams(url: string):object {
-        const index  = url.indexOf('?')
+    static getExtraParams(url: string): object {
+        const index = url.indexOf('?')
         const result = { url }
         if (index !== -1) {
             const newUrl = url.substr(index + 1)
             result.url = result.url.substr(0, index)
-            const params     = newUrl.split('&')
+            const params = newUrl.split('&')
         }
         return result
     }
@@ -52,7 +52,7 @@ export default class Bitsaa implements ExchangeInterface {
     axiosInterceptor(config: any) {
         const nounce = new Date().getTime()
 
-        let params          = ''
+        let params = ''
         let queryParamsList = [`access_key=${this.apiKey}`, `tonce=${nounce}`]
 
         let { url } = config
@@ -70,8 +70,11 @@ export default class Bitsaa implements ExchangeInterface {
         queryParamsList.sort((a, b) => a.charCodeAt(0) - b.charCodeAt(0))
         const queryParams = queryParamsList.join('&')
 
-        const text      = `${config.method.toUpperCase()}|/api/v2${url}|${queryParams}`
-        const hash      = crypto.createHmac('sha256', this.secretKey).update(text).digest('hex');
+        const text = `${config.method.toUpperCase()}|/api/v2${url}|${queryParams}`
+        const hash = crypto
+            .createHmac('sha256', this.secretKey)
+            .update(text)
+            .digest('hex')
         const newConfig = config
 
         newConfig.url = `${url}?${queryParams}&signature=${hash}`
@@ -80,7 +83,7 @@ export default class Bitsaa implements ExchangeInterface {
         return newConfig
     }
 
-    async getBalance(cryptocoin?:CryptoCoin): Promise<Account> {
+    async getBalance(cryptocoin?: CryptoCoin): Promise<Account> {
         const url = '/members/me.json'
         const res = await this.privateApi.get(url)
         const account = new Account({
@@ -102,7 +105,7 @@ export default class Bitsaa implements ExchangeInterface {
         if (!cryptocoin) {
             const url = '/orders/clear.json'
             const res = await this.privateApi.post(url)
-            return null;
+            return null
         }
 
         const ordersList = await this.getMyOrders(cryptocoin)
@@ -115,17 +118,21 @@ export default class Bitsaa implements ExchangeInterface {
         return res.data
     }
 
-    static getMarket(cryptocoin: CryptoCoin):string {
+    static getMarket(cryptocoin: CryptoCoin): string {
         switch (cryptocoin.priCoin) {
             case 'dkd':
                 return 'dkdbtc'
+            case 'btc':
+                if (cryptocoin.secCoin === 'ngn') {
+                    return 'btcngn'
+                }
             default:
         }
         throw new Error('invalid cryptocoin')
     }
 
-    async putOrder(order: Order):Promise<Order> {
-        let url  = '/orders.json?'
+    async putOrder(order: Order): Promise<Order> {
+        let url = '/orders.json?'
         url += `market=${Bitsaa.getMarket(order.cryptocoin)}`
         url += `&price=${order.price}`
         url += `&side=${Bitsaa.getOrderType(order.type)}`
@@ -143,10 +150,12 @@ export default class Bitsaa implements ExchangeInterface {
         }
     }
 
-    static getOrderType(type: OrderTypeEnum):string {
+    static getOrderType(type: OrderTypeEnum): string {
         switch (type) {
-            case OrderTypeEnum.BUY: return 'buy'
-            case OrderTypeEnum.SELL: return 'sell'
+            case OrderTypeEnum.BUY:
+                return 'buy'
+            case OrderTypeEnum.SELL:
+                return 'sell'
             default:
         }
         throw new Error('Invalid Type')
@@ -181,11 +190,13 @@ export default class Bitsaa implements ExchangeInterface {
         return ordersList
     }
 
-    async getOrders(cryptocoin: CryptoCoin, limit:number = 10):
-        Promise<{ buyOrderList: Order[], sellOrderList: Order[] }> {
-        const url                    = `order_book.json?market=${Bitsaa.getMarket(cryptocoin)}&asks_limit=${limit}&bids_limit=${limit}`
-        const res                    = await this.publicApi.get(url)
-        const buyOrderList: Order[]  = []
+    async getOrders(
+        cryptocoin: CryptoCoin,
+        limit: number = 10
+    ): Promise<{ buyOrderList: Order[]; sellOrderList: Order[] }> {
+        const url = `order_book.json?market=${Bitsaa.getMarket(cryptocoin)}&asks_limit=${limit}&bids_limit=${limit}`
+        const res = await this.publicApi.get(url)
+        const buyOrderList: Order[] = []
         const sellOrderList: Order[] = []
         for (const orderObj of res.data.asks) {
             sellOrderList.push(new Order({
@@ -219,8 +230,9 @@ export default class Bitsaa implements ExchangeInterface {
                         cryptocoin
                     })
                     return ticker
-                }).catch((err) => {
-                    console.log(err);
+                })
+                .catch((err) => {
+                    console.log(err)
                     return new Ticker({})
                 })
         }

@@ -1,10 +1,11 @@
-export enum OrderTypeEnum{
+export enum OrderTypeEnum {
     SELL = 'sell',
     BUY = 'buy'
 }
 
-export enum Currency{
+export enum Currency {
     DKD = 'dkd',
     BTC = 'btc',
-    USD = 'usd'
+    USD = 'usd',
+    NGN = 'ngn'
 }
