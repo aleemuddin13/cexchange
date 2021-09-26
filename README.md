@@ -1,7 +1,7 @@
 # cexchange
 Implementation of private and public api's of crypto exchanges
 
-![Crypto Exchange Demo - WyomingHackathon](https://img.youtube.com/vi/RT-2c8oqIrg/0.jpg)](https://www.youtube.com/watch?v=RT-2c8oqIrg "Crypto Exchange Demo - WyomingHackathon")
+[![Crypto Exchange Demo - WyomingHackathon](https://img.youtube.com/vi/RT-2c8oqIrg/0.jpg)](https://www.youtube.com/watch?v=RT-2c8oqIrg "Crypto Exchange Demo - WyomingHackathon")]
 
 [![Build Status](https://travis-ci.org/aleemuddin13/cexchange.svg?branch=master)](https://travis-ci.org/aleemuddin13/cexchange)
 [![Coverage Status](https://coveralls.io/repos/github/aleemuddin13/cexchange/badge.svg?branch=master)](https://coveralls.io/github/aleemuddin13/cexchange?branch=master)
